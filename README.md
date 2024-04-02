@@ -26,13 +26,16 @@ La configuración de Code Owners se implementará en las ramas Main y Develop de
 
 En caso de que el directorio `src/.github` no exista, se creará automáticamente durante la implementación. Este directorio contendrá el archivo CODEOWNERS, asegurando que la estructura necesaria esté presente.
 
-## Implementación Progresiva
+## Secretos
 
-La implementación de Code Owners comenzará en los repositorios migrados y se extenderá a las próximas olas de migraciones. Esto permite una transición gradual y controlada, asegurando la consistencia en todo el proceso.
+El flujo de trabajo utiliza un secreto GH_PAT, que debe ser un Token de Acceso Personal de GitHub del usuario agregado en el repositories.json con los permisos necesarios para crear repositorios, configurar protecciones de ramas y crear variables de repositorio.
 
 ---
 
 ## Estructura del json
+
+Es necesario detallar el owner del repositorio y el usuario
+
 ```json
     {
         "owner": "BancoBice",

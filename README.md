@@ -31,3 +31,15 @@ En caso de que el directorio `src/.github` no exista, se creará automáticament
 La implementación de Code Owners comenzará en los repositorios migrados y se extenderá a las próximas olas de migraciones. Esto permite una transición gradual y controlada, asegurando la consistencia en todo el proceso.
 
 ---
+
+## Estructura del json
+```json
+    {
+        "owner": "BancoBice",
+        "user": "userex_bice",
+        "repositories": [
+            {"repo_name": "SISVYSCTR-ms-login-legacy"},
+            {"repo_name": "SISVYSCTR-osb-acl-telo-4010"},
+            {"repo_name": "SISVYSCTR-osb-utilesClaveAcceso"}
+        ]
+    }

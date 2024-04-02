@@ -1,0 +1,31 @@
+# CODEOWNERS 
+
+## Owners
+
+## Feature Branch
+ 
+feature/**
+
+## Develop, Release, Hotfix and Bugfix Branch
+
+# Technical Leads responsible for approval in Develop and managing changes in Release:
+
+develop @BancoBice/bitbucket-$ProjectKey-tl @BancoBice/devsecops-users @BancoBice/devsecops
+
+release/* @BancoBice/bitbucket-$ProjectKey-tl @BancoBice/devsecops-users @BancoBice/devsecops
+
+bugfix/*  @BancoBice/bitbucket-$ProjectKey-tl @BancoBice/devsecops-users @BancoBice/devsecops
+
+hotfix/*  @BancoBice/bitbucket-$ProjectKey-tl @BancoBice/devsecops-users @BancoBice/devsecops
+
+## Main Branch
+
+# Custodians responsible for approving Pull Requests to Main:
+
+main @BancoBice/bitbucket-custodio @BancoBice/devsecops-users @BancoBice/devsecops
+
+## Deployment Environments
+
+# Technical Lead responsible for viewing deployment environments:
+
+**/.github/** @BancoBice/devsecops

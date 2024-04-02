@@ -1,0 +1,31 @@
+# CODEOWNERS 
+
+## Owners
+
+## Feature Branch
+
+feature/**
+
+## Develop, Release, Hotfix and Bugfix Branch
+
+# Technical Leads responsible for approval in Develop and managing changes in Release:
+
+develop @bitbucket-CODEOWNERS-tl @devsecops-users
+
+release/* @bitbucket-CODEOWNERS-tl @devsecops-users
+
+bugfix/*  @bitbucket-CODEOWNERS-tl @devsecops-users
+
+hotfix/*  @bitbucket-CODEOWNERS-tl @devsecops-users
+
+## Main Branch
+
+# Custodians responsible for approving Pull Requests to Main:
+
+main @bitbucket-custodio @devsecops-users
+
+## Deployment Environments
+
+# Technical Lead responsible for viewing deployment environments:
+
+**/.github/** @admin @devops 

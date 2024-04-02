@@ -1,0 +1,96 @@
+name: Create CODEOWNERS
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  Get-Repositories-To-Inject:
+      runs-on: ubuntu-latest
+      outputs:
+        REPOSITORIES: ${{ steps.set-matrix.outputs.REPO }}
+        OWNER: ${{ steps.set-owner.outputs.OW}}
+        USER: ${{ steps.set-user.outputs.US}}
+        EMAIL: ${{ steps.set-email.outputs.EM }}
+      steps:
+        - name: Checkout to repository
+          uses: actions/checkout@v3
+       
+        - name: Set matrix data
+          id: set-matrix
+          run: echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
+
+        - name: Set owner
+          id: set-owner
+          run: echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+
+        - name: Set user
+          id: set-user
+          run: echo "US=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+
+        - name: Set email
+          id: set-email
+          run: echo "EM=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+
+  create-CODEOWNERS:
+    runs-on: ubuntu-latest
+    needs: [Get-Repositories-To-Inject]
+    strategy:
+        max-parallel: 1
+        # SET MATRIX WITH repositories TO MIGRATE
+        matrix: 
+            repositories: ${{fromJson(needs.Get-Repositories-To-Inject.outputs.REPOSITORIES)}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set and Create CODEOWNERS
+        run: |
+          owner=$(jq -r '.owner' repositories.json) && echo $owner
+          repo_names=${{ matrix.repositories }}
+          project_names=$(echo "$repo_names" | sed 's/-.*//')
+          sed "s/\$ProjectKey/$project_names/g" codeowners_template.txt > CODEOWNERS
+          cat CODEOWNERS
+
+      - name: Add File to Another Repo
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          OWNER: ${{ needs.Get-Repositories-To-Inject.outputs.OWNER }}
+          USER: ${{ needs.Get-Repositories-To-Inject.outputs.USER }}
+          EMAIL: ${{ needs.Get-Repositories-To-Inject.outputs.EMAIL }}
+        run: |
+          git clone https://${{ env.USER }}:${{ env.GH_TOKEN }}@github.com/${{ env.OWNER }}/${{ matrix.repositories }}.git
+          git config --global user.email "${{ env.EMAIL }}"
+          git config --global user.name "${{ env.USER }}" 
+          mkdir -p ${{ matrix.repositories }}/.github
+          cp -f ./CODEOWNERS ./${{ matrix.repositories }}/.github/CODEOWNERS
+          cd ${{ matrix.repositories }}
+          git add .
+          git commit -m "AB# Add file from GitHub Actions"
+          git push
+          
+          default_branch=$(git remote show origin | grep "HEAD branch" | awk '{print $NF}')
+
+          if [ "$default_branch" == "develop" ]; then
+              echo "La rama por defecto es develop."
+          else
+              if git ls-remote --exit-code --heads origin develop >/dev/null 2>&1; then
+                git checkout develop
+                cd ..
+                mkdir -p ${{ matrix.repositories }}/.github
+                cp -f ./CODEOWNERS ./${{ matrix.repositories }}/.github/CODEOWNERS
+                cd ${{ matrix.repositories }}
+                git add .
+                git commit -m "AB# Add/Update CODEOWNERS in develop branch from GitHub Actions"
+                git push origin develop
+              else
+                echo "La rama 'develop' no existe en el repositorio remoto."
+              fi
+          fi
+
+
+
+
+
+
+

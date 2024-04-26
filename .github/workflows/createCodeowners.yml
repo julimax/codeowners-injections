@@ -18,7 +18,7 @@ jobs:
        
         - name: Set matrix data
           id: set-matrix
-          run: echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
+          run: echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
         - name: Set owner
           id: set-owner
